@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Github, Linkedin, MessageCircle, Twitter } from 'lucide-react';
 import Link from 'next/link';
-// import Link from 'next/link';
 
 const ExperimentalLayout = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -11,37 +10,41 @@ const ExperimentalLayout = () => {
   const headerOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   
   useEffect(() => {
-    // Updated font import to match the design
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400&family=Pinyon+Script&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-    
-    const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
-      setMousePosition({
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight
-      });
-    };
+    if (typeof window !== 'undefined') {
+      // Updated font import to match the design
+      const link = document.createElement('link');
+      link.href = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400&family=Pinyon+Script&display=swap';
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+      
+      const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
+        setMousePosition({
+          x: e.clientX / window.innerWidth,
+          y: e.clientY / window.innerHeight
+        });
+      };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      document.head.removeChild(link);
-    };
+      window.addEventListener('mousemove', handleMouseMove);
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        document.head.removeChild(link);
+      };
+    }
   }, []);
 
   return (
     <div className="bg-black text-white min-h-screen">
       {/* Dynamic cursor */}
-      <div 
-        className="fixed w-4 h-4 bg-white rounded-full pointer-events-none mix-blend-difference z-50"
-        style={{
-          left: mousePosition.x * window.innerWidth,
-          top: mousePosition.y * window.innerHeight,
-          transform: 'translate(-50%, -50%)'
-        }}
-      />
+      {typeof window !== 'undefined' && (
+        <div 
+          className="fixed w-4 h-4 bg-white rounded-full pointer-events-none mix-blend-difference z-50"
+          style={{
+            left: mousePosition.x * window.innerWidth,
+            top: mousePosition.y * window.innerHeight,
+            transform: 'translate(-50%, -50%)'
+          }}
+        />
+      )}
 
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full z-40 mix-blend-difference">
